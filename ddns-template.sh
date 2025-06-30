@@ -2,7 +2,6 @@
 CLOUDFLARE_EMAIL='' 			# Your email login in cloudflare
 CLOUDFLARE_API_KEY='' 			# Global token API Token
 ZONE_ID='' 						# Can be found in the "Overview" tab of your domain
-DNS_RECORD_ID='' 				# Which record you want to be synced
 TTL=1 							# Set the DNS TTL (seconds) 1 = auto
 NAMES=('' '') 					# Titles of sites ('google.com' 'youtube.google.com' '...')
 PROXIEDS=('' '') 				# Set the proxy to true or false of titles ('true' 'false' 'true' '...')
