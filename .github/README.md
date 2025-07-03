@@ -12,4 +12,4 @@ An ip synchronizer for dns of domains hosted on cloudflare easy to set up and wi
 - 🤏 Minimum number of calculations.
 - 🦾 Fully automated.
 - 🧮 Management of several dns names at the same time.
-
+- 🧵 Multithread.
