@@ -54,7 +54,7 @@ send_info ()
 				\"comment\": \"$(date +'%Y-%m-%d %H:%M:%S')\",
 				\"content\": \"$IP\",
 				\"proxied\": ${PROXIEDS[$i]}
-			}" &
+			}" &> /dev/null &
 	done
 }
 
