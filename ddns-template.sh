@@ -45,7 +45,7 @@ send_info ()
 				\"name\": \"${NAMES[$i]}\",
 				\"ttl\": $TTL,
 				\"type\": \"${TYPES[$i]}\",
-				\"comment\": \"\",
+				\"comment\": \"$(date +'%Y-%m-%d %H:%M:%S')\",
 				\"content\": \"$IP\",
 				\"proxied\": ${PROXIEDS[$i]}
 			}"
