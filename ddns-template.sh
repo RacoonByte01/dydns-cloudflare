@@ -25,18 +25,24 @@ get_public_ip ()
 }
 
 ###########################################
+## Get Cloudflare DNS RECORD ID by the name
+###########################################
+get_dns_record_id()
+{
+	local DNS_RECORD=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=A&name=$1" \
+			-H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
+			-H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
+			-H "Content-Type: application/json" )
+	echo "$DNS_RECORD" | sed -E 's/.*"id":"([A-Za-z0-9_]+)".*/\1/'
+}
+
+###########################################
 ## Cloudflare updater from oficial [webside](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/edit/)
 ###########################################
 send_info ()
 {
 	for ((i = 0; i < ${#NAMES[@]}; i++)); do
-		local DNS_RECORD=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=A&name=${NAMES[$i]}" \
-			-H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
-			-H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
-			-H "Content-Type: application/json" )
-
-		local DNS_RECORD_ID=$(echo "$DNS_RECORD" | sed -E 's/.*"id":"([A-Za-z0-9_]+)".*/\1/')
-		curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$DNS_RECORD_ID \
+		curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$(shift; get_dns_record_id ${NAMES[$i]}) \
 			-X PATCH \
 			-H 'Content-Type: application/json' \
 			-H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
@@ -48,7 +54,7 @@ send_info ()
 				\"comment\": \"$(date +'%Y-%m-%d %H:%M:%S')\",
 				\"content\": \"$IP\",
 				\"proxied\": ${PROXIEDS[$i]}
-			}"
+			}" &
 	done
 }
 
