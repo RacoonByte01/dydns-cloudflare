@@ -6,6 +6,7 @@ TTL=1 							# Set the DNS TTL (seconds) 1 = auto
 NAMES=('' '') 					# Titles of sites ('google.com' 'youtube.google.com' '...')
 PROXIEDS=('' '') 				# Set the proxy to true or false of titles ('true' 'false' 'true' '...')
 TYPES=('' '') 					# Set the types of  of titles ('A' 'AAAA' '...')
+FILE_MD5_IP='MD5.IP' 			# Path of md5 ip file
 
 ###########################################
 ## Get public ip
@@ -22,6 +23,25 @@ get_public_ip ()
 		fi
 	done
 	IP=$(sh -c "$COMMAND_SEND")
+}
+
+###########################################
+## Get if new and old ip are the same
+###########################################
+is_old_equals_new_ip()
+{
+        if [ ! -f $FILE_MD5_IP ]; then
+                echo 'Do not have any ip save generate new ip md5 file...'
+                echo $(echo $IP | md5sum | awk '{printf $1}') >> $FILE_MD5_IP
+                echo 'Generated.'
+                echo 1
+        else
+                if [[ "$(echo $IP | md5sum | awk '{printf $1}')" == "$(cat $FILE_MD5_IP)" ]]; then
+                        echo 0
+                else
+                        echo 1
+                fi
+        fi
 }
 
 ###########################################
@@ -59,4 +79,7 @@ send_info ()
 }
 
 get_public_ip
-send_info
+if [[ "$(is_old_equals_new_ip)" == "1" ]]; then 
+	echo Sending info...
+	send_info
+fi
