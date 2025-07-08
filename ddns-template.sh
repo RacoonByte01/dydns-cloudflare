@@ -14,35 +14,35 @@ FILE_MD5_IP='MD5.IP' 			# Path of md5 ip file
 get_public_ip () 
 {
 	local IP_SERVICES=('https://api.ipify.org' 'https://ipv4.icanhazip.com' 'https://ipinfo.io/ip') # public ip services
-	local COMMAND_SEND=''
+		local COMMAND_SEND=''
 
-	for ((i = 0; i < ${#IP_SERVICES[@]}; i++)); do
-		COMMAND_SEND="$COMMAND_SEND""curl '${IP_SERVICES[$i]}'"
-		if [[ $i != $((${#IP_SERVICES[@]}-1)) ]]; then
-			COMMAND_SEND="$COMMAND_SEND || "
-		fi
-	done
-	IP=$(sh -c "$COMMAND_SEND")
-}
+		for ((i = 0; i < ${#IP_SERVICES[@]}; i++)); do
+			COMMAND_SEND="$COMMAND_SEND""curl '${IP_SERVICES[$i]}'"
+			if [[ $i != $((${#IP_SERVICES[@]}-1)) ]]; then
+				COMMAND_SEND="$COMMAND_SEND || "
+			fi
+		done
+		IP=$(sh -c "$COMMAND_SEND")
+	}
 
 ###########################################
 ## Get if new and old ip are the same
 ###########################################
 is_old_equals_new_ip()
 {
-        if [ ! -f $FILE_MD5_IP ]; then
-                echo 'Do not have any ip save generate new ip md5 file...'
-                echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
-                echo 'Generated.'
-                echo 1
-        else
-                if [[ "$(echo $IP | md5sum | awk '{printf $1}')" == "$(cat $FILE_MD5_IP)" ]]; then
-                        echo 0
-                else
-                        echo 1
-						echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
-                fi
-        fi
+	if [ ! -f $FILE_MD5_IP ]; then
+		echo 'Do not have any ip save generate new ip md5 file...'
+		echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
+		echo 'Generated.'
+		echo 1
+	else
+		if [[ "$(echo $IP | md5sum | awk '{printf $1}')" == "$(cat $FILE_MD5_IP)" ]]; then
+			echo 0
+		else
+			echo 1
+			echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
+		fi
+	fi
 }
 
 ###########################################
@@ -51,9 +51,9 @@ is_old_equals_new_ip()
 get_dns_record_id()
 {
 	local DNS_RECORD=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=A&name=$1" \
-			-H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
-			-H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
-			-H "Content-Type: application/json" )
+		-H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
+		-H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
+		-H "Content-Type: application/json" )
 	echo "$DNS_RECORD" | sed -E 's/.*"id":"([A-Za-z0-9_]+)".*/\1/'
 }
 
