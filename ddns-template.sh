@@ -32,7 +32,7 @@ is_old_equals_new_ip()
 {
         if [ ! -f $FILE_MD5_IP ]; then
                 echo 'Do not have any ip save generate new ip md5 file...'
-                echo $(echo $IP | md5sum | awk '{printf $1}') >> $FILE_MD5_IP
+                echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
                 echo 'Generated.'
                 echo 1
         else
@@ -40,6 +40,7 @@ is_old_equals_new_ip()
                         echo 0
                 else
                         echo 1
+						echo $(echo $IP | md5sum | awk '{printf $1}') > $FILE_MD5_IP
                 fi
         fi
 }
